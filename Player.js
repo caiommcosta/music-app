@@ -1,9 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
 import { Audio } from 'expo-av';
 import { AntDesign } from '@expo/vector-icons';
-import * as Progress from 'react-native-progress';
 
 
 export default function Player(props) {
@@ -37,7 +35,7 @@ export default function Player(props) {
             await curAudio.loadAsync(curFile);
             await curAudio.playAsync();
         } catch (error) { }
-
+        
         props.setAudio(curAudio);
         props.setMusics(newMusics);
         props.setPlaying(true);
@@ -130,23 +128,25 @@ export default function Player(props) {
 
     return (
         <View style={styles.player}>
-            <Progress.Bar progress={0.3} width={200} />
-            <TouchableOpacity onPress={() => handleBack()} style={{ right: 20, marginLeft: 20 }}>
-                <AntDesign name='banckward' size={35} color={"white"} />
-            </TouchableOpacity>
-            {
-                (!props.playing) ?
-                    <TouchableOpacity onPress={() => handlePlay()} style={{ right: 20, marginLeft: 20 }}>
-                        <AntDesign name='playcircleo' size={35} color={"white"} />
-                    </TouchableOpacity>
-                    :
-                    <TouchableOpacity onPress={() => handlePause()} style={{ right: 20, marginLeft: 20 }}>
-                        <AntDesign name='pausecircleo' size={35} color={"white"} />
-                    </TouchableOpacity>
-            }
-            <TouchableOpacity onPress={() => handleNext()} style={{ right: 20, marginLeft: 20 }}>
-                <AntDesign name='forward' size={35} color={"white"} />
-            </TouchableOpacity>
+
+            <View style={styles.playerButtons}>
+                <TouchableOpacity onPress={() => handleBack()} style={{ right: 0, bottom: 0}}>
+                    <AntDesign name='banckward' size={35} color={"white"} />
+                </TouchableOpacity>
+                {
+                    (!props.playing) ?
+                        <TouchableOpacity onPress={() => handlePlay()} style={styles.btnPlay}>
+                            <AntDesign name='playcircleo' size={40} color={"white"} />
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity onPress={() => handlePause()} style={styles.btnPause}>
+                            <AntDesign name='pausecircleo' size={40} color={"#111"} />
+                        </TouchableOpacity>
+                }
+                <TouchableOpacity onPress={() => handleNext()} style={{ right: 0, bottom:0}}>
+                    <AntDesign name='forward' size={35} color={"white"} />
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -155,14 +155,65 @@ export default function Player(props) {
 const styles = StyleSheet.create({
     player: {
         width: '100%',
-        height: 100,
+        height: 180,
         position: 'absolute',
         bottom: 0,
         left: 0,
-        zIndex: 999,
-        backgroundColor: '#111',
+        zIndex: 998,
+        backgroundColor: '#191919',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row'
+    },
+    playerButtons: {
+        width: '100%',
+        paddingLeft: 70,
+        paddingRight: 70,
+        height: 100,
+        position: 'absolute',
+        bottom: 0,
+        backgroundColor: '#191919',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+    slider: {
+        width: '80%',
+        height: 40,
+        bottom: 100,
+        position: 'absolute',
+        zIndex: 999
+    },
+    text: {
+        color: 'white'
+    },
+    musicTime: {
+        flex: 1,
+        flexDirection: 'row',
+        width: '100%',
+        position: 'absolute',
+        justifyContent: 'space-between',
+        bottom: 100,
+        padding: 10
+    },
+    btnPlay: {
+        bottom: 0,
+        marginLeft: 15,
+        marginRight: 15,
+        backgroundColor: "#111",
+        borderRadius: 50,
+        borderWidth: 3,
+        borderColor: "#111",
+        color: "white"
+    },
+    btnPause: {
+        bottom: 0,
+        marginLeft: 15,
+        marginRight: 15,
+        backgroundColor: "#1db954",
+        borderRadius: 50,
+        borderWidth: 3,
+        borderColor: "#1db954",
+        color: "111"
     }
 })

@@ -1,59 +1,71 @@
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, LogBox } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Audio } from 'expo-av';
 import { AntDesign } from '@expo/vector-icons';
 import Player from './Player';
 
-
 export default function App() {
   LogBox.ignoreAllLogs(true);
+  const promise = new Promise((resolve, reject) => {
+
+    resolve.getStatusAsync().then((result) => {
+      console.log(result.durationMillis)
+    });
+  });
 
   const [audioIndex, setAudioIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [audio, setAudio] = useState(null);
   const [musics, setMusics] = useState([
     {
+      id: 1,
       name: 'Music 1',
       artist: 'T. Schürger',
       playing: false,
       file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' }
     },
     {
+      id: 2,
       name: 'Music 2',
       artist: 'T. Schürger',
       playing: false,
       file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' }
     },
     {
+      id: 3,
       name: 'Music 3',
       artist: 'T. Schürger',
       playing: false,
       file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
     },
     {
+      id: 4,
       name: 'Music 4',
       artist: 'T. Schürger',
       playing: false,
-      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' }
     },
     {
+      id: 5,
       name: 'Music 5',
       artist: 'T. Schürger',
       playing: false,
-      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' }
     },
     {
+      id: 6,
       name: 'Music 6',
       artist: 'T. Schürger',
       playing: false,
-      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' }
     },
     {
+      id: 7,
       name: 'Music 7',
       artist: 'T. Schürger',
       playing: false,
-      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' }
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' }
     },
   ]);
 
@@ -69,8 +81,9 @@ export default function App() {
         setPlaying(true);
         setAudioIndex(id);
       }
-      else
+      else {
         musics[k].playing = false;
+      }
 
       return musics[k];
     })
@@ -85,6 +98,8 @@ export default function App() {
       await curAudio.loadAsync(curFile);
       await curAudio.playAsync();
     } catch (error) { }
+
+    promise(curAudio);
 
     setAudio(curAudio);
     setMusics(newMusics);
@@ -109,7 +124,7 @@ export default function App() {
           musics.map((val, k) => {
             if (val.playing) {
               return (
-                <View style={styles.table}>
+                <View style={styles.table} key={val.id}>
                   <TouchableOpacity onPress={() => changeMusic(k)} style={{ width: '100%', flexDirection: 'row' }}>
                     <Text style={styles.tableTextSelected}><AntDesign name="play" size={15} color={"#1db954"} /> {val.name}</Text>
                     <Text style={styles.tableTextSelected}>{val.artist}</Text>
@@ -118,7 +133,7 @@ export default function App() {
               )
             } else {
               return (
-                <View style={styles.table}>
+                <View style={styles.table} key={val.id}>
                   <TouchableOpacity onPress={() => changeMusic(k)} style={{ width: '100%', flexDirection: 'row' }}>
                     <Text style={styles.tableText}><AntDesign name="play" size={15} color={"white"} /> {val.name}</Text>
                     <Text style={styles.tableText}>{val.artist}</Text>
